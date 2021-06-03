@@ -21,6 +21,7 @@ namespace MovieAPI.Controllers
             return Created("/", movie);
         }
 
+        // Please ignore this GET, I added it for sanity check to ensure CSV to JSON is working correctly
         [HttpGet]
         public ActionResult <List<Movie>> ReadMovie()
         {
@@ -28,6 +29,8 @@ namespace MovieAPI.Controllers
             return Ok(movies);
         }
 
+        // GET /metadata/:movieId
+        // To get a list of movies with the id specified
         [HttpGet("{movieId}")]
         public ActionResult<List<Movie>> ReadMovieByMovieId(int movieId)
         {
@@ -38,7 +41,11 @@ namespace MovieAPI.Controllers
                 return NotFound();
             }
 
-            var result = movies.GroupBy(x => x.Title.ToLower()).Select(y => y.Last()).OrderBy(z => z.Language);
+            var result = movies
+                .GroupBy(x => x.Title.ToLower()) // Group by name - Note: Added toLower() as I noticed there are some titles with captials
+                .Select(y => y.Last()) // Get the last in the group i.e. Highest ID in the group
+                .OrderBy(z => z.Language); // Order by Language Alphabetically
+
             return Ok(result);
         }
     }

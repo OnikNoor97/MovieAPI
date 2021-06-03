@@ -10,8 +10,8 @@ namespace MovieAPI.Data
 {
     public class Database
     {
+        // Path to get CSV files
         public string MetadataPath = $"{Directory.GetCurrentDirectory()}/Data/metadata.csv";
-        public string RawMetaDataPath = $"{Directory.GetCurrentDirectory()}/Data/rawmetadata.csv";
         public string StatsPath = $"{Directory.GetCurrentDirectory()}/Data/stats.csv";
 
         public List<Movie> getMovies(int? id = null) 
@@ -26,19 +26,22 @@ namespace MovieAPI.Data
                 }
             }
 
-            return id == null ? movies : movies.Where(x => x.MovieId == id).ToList();
+            return id == null 
+                ? movies // If ID is null, return all
+                : movies.Where(x => x.MovieId == id).ToList();
         }
         public void addMovie(Movie movie)
         {
             List<Movie> movies = this.getMovies();
 
-            movie.Id = movies.Last().Id + 1;
+            movie.Id = movies.Last().Id + 1; // Get the last ID in the 'database' and add one (Normally Database handles Primary Key Auto Increment)
             movies.Add(movie);
 
             using (StreamWriter streamWriter = new StreamWriter(MetadataPath))
             {
                 using (var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture))
                 {
+                    // Adds the new Records directly to the CSV file
                     csvWriter.WriteRecords(movies);
                 }
             }
