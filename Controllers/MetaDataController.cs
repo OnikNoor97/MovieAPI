@@ -38,7 +38,7 @@ namespace MovieAPI.Controllers
             
             if(movies.Count == 0)
             {
-                return NotFound();
+                return NotFound(); // If there are no movies with the Movie ID provided, not found is shown to the client
             }
 
             var result = movies

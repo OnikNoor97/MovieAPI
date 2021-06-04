@@ -11,8 +11,8 @@ namespace MovieAPI.Data
     public class Database
     {
         // Path to get CSV files
-        public string MetadataPath = $"{Directory.GetCurrentDirectory()}/Data/metadata.csv";
-        public string StatsPath = $"{Directory.GetCurrentDirectory()}/Data/stats.csv";
+        private string MetadataPath = $"{Directory.GetCurrentDirectory()}/Data/metadata.csv";
+        private string StatsPath = $"{Directory.GetCurrentDirectory()}/Data/stats.csv";
 
         public List<Movie> getMovies(int? id = null) 
         {
@@ -28,8 +28,9 @@ namespace MovieAPI.Data
 
             return id == null 
                 ? movies // If ID is null, return all
-                : movies.Where(x => x.MovieId == id).ToList();
+                : movies.Where(x => x.MovieId == id).ToList(); // Gets all movies which the MovieID specified
         }
+
         public void addMovie(Movie movie)
         {
             List<Movie> movies = this.getMovies();
@@ -41,7 +42,7 @@ namespace MovieAPI.Data
             {
                 using (var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture))
                 {
-                    // Adds the new Records directly to the CSV file
+                    // Adds records include the new one directly to the CSV file
                     csvWriter.WriteRecords(movies);
                 }
             }
